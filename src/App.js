@@ -1,7 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function App() {
 const [activeTab, setActiveTab] = useState("dashboard");
+const [clients, setClients] = useState([
+{ id: 1, name: "ABC Company", email: "abc@mail.com", status: "Active" },
+{ id: 2, name: "XYZ Ltd", email: "xyz@mail.com", status: "Pending" },
+]);
+const [invoices, setInvoices] = useState([
+{ id: 1, client: "ABC Company", amount: "₦150,000", status: "Paid" },
+{ id: 2, client: "XYZ Ltd", amount: "₦75,000", status: "Unpaid" },
+]);
+const [newClient, setNewClient] = useState({ name: "", email: "" });
+
+const stats = {
+totalClients: clients.length,
+totalInvoices: invoices.length,
+revenue: "₦225,000",
+pending: invoices.filter(i => i.status === "Unpaid").length
+};
+
+const addClient = () => {
+if (newClient.name && newClient.email) {
+setClients([...clients, {
+id: clients.length + 1,
+...newClient,
+status: "Active"
+}]);
+setNewClient({ name: "", email: "" });
+}
+};
 
 return (
 <div style={{
@@ -11,67 +38,26 @@ color: "white",
 fontFamily: "Arial, sans-serif",
 padding: "20px"
 }}>
-<h1 style={{fontSize: "32px", fontWeight: "bold"}}>Good morning, EFE 👋</h1>
-<p style={{opacity: 0.8}}>Welcome to your EFE TIMES Work Suite</p>
+<h1 style={{fontSize: "32px", fontWeight: "bold", marginBottom: "5px"}}>
+Good morning, EFE 👋
+</h1>
+<p style={{opacity: 0.8, marginBottom: "20px"}}>
+Welcome to your EFE TIMES Work Suite
+</p>
 
-<div style={{
-display: "flex",
-gap: "10px",
-marginTop: "20px",
-marginBottom: "20px"
-}}>
+{/* NAV BUTTONS */}
+<div style={{display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap"}}>
+{["dashboard", "clients", "invoices"].map(tab => (
 <button
-onClick={() => setActiveTab("dashboard")}
+key={tab}
+onClick={() => setActiveTab(tab)}
 style={{
-padding: "10px 20px",
-borderRadius: "8px",
+padding: "12px 24px",
+borderRadius: "10px",
 border: "none",
-background: activeTab === "dashboard" ? "white" : "rgba(255,255,255,0.2)",
-color: activeTab === "dashboard" ? "#6B46C1" : "white",
+background: activeTab === tab ? "white" : "rgba(255,255,255,0.2)",
+color: activeTab === tab ? "#6B46C1" : "white",
 fontWeight: "bold",
-cursor: "pointer"
-}}>
-Dashboard
-</button>
-<button
-onClick={() => setActiveTab("clients")}
-style={{
-padding: "10px 20px",
-borderRadius: "8px",
-border: "none",
-background: activeTab === "clients" ? "white" : "rgba(255,255,255,0.2)",
-color: activeTab === "clients" ? "#6B46C1" : "white",
-fontWeight: "bold",
-cursor: "pointer"
-}}>
-Clients
-</button>
-<button
-onClick={() => setActiveTab("invoices")}
-style={{
-padding: "10px 20px",
-borderRadius: "8px",
-border: "none",
-background: activeTab === "invoices" ? "white" : "rgba(255,255,255,0.2)",
-color: activeTab === "invoices" ? "#6B46C1" : "white",
-fontWeight: "bold",
-cursor: "pointer"
-}}>
-Invoices
-</button>
-</div>
+cursor: "
 
-<div style={{
-background: "white",
-color: "#333",
-borderRadius: "16px",
-padding: "20px"
-}}>
-{activeTab === "dashboard" && <h2>📊 Dashboard: Your stats will go here</h2>}
-{activeTab === "clients" && <h2>👥 Clients: Manage your clients here</h2>}
-{activeTab === "invoices" && <h2>🧾 Invoices: Create invoices here</h2>}
-</div>
-</div>
-);
-}
 
