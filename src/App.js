@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import "./App.css";
 
-export default function App() {
+function App() {
 const [activeTab, setActiveTab] = useState("dashboard");
 const [clients, setClients] = useState([
 { id: 1, name: "ABC Company", email: "abc@mail.com", status: "Active" },
@@ -11,13 +12,6 @@ const [invoices, setInvoices] = useState([
 { id: 2, client: "XYZ Ltd", amount: "₦75,000", status: "Unpaid" },
 ]);
 const [newClient, setNewClient] = useState({ name: "", email: "" });
-
-const stats = {
-totalClients: clients.length,
-totalInvoices: invoices.length,
-revenue: "₦225,000",
-pending: invoices.filter(i => i.status === "Unpaid").length
-};
 
 const addClient = () => {
 if (newClient.name && newClient.email) {
@@ -31,33 +25,60 @@ setNewClient({ name: "", email: "" });
 };
 
 return (
-<div style={{
-minHeight: "100vh",
-background: "linear-gradient(135deg, #6B46C1 0%, #9333EA 100%)",
-color: "white",
-fontFamily: "Arial, sans-serif",
-padding: "20px"
-}}>
-<h1 style={{fontSize: "32px", fontWeight: "bold", marginBottom: "5px"}}>
-Good morning, EFE 👋
-</h1>
-<p style={{opacity: 0.8, marginBottom: "20px"}}>
-Welcome to your EFE TIMES Work Suite
-</p>
+<div className="app">
+<h1>Good morning, EFE 👋</h1>
+<p>Welcome to your EFE TIMES Work Suite</p>
 
-{/* NAV BUTTONS */}
-<div style={{display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap"}}>
-{["dashboard", "clients", "invoices"].map(tab => (
-<button
-key={tab}
-onClick={() => setActiveTab(tab)}
-style={{
-padding: "12px 24px",
-borderRadius: "10px",
-border: "none",
-background: activeTab === tab ? "white" : "rgba(255,255,255,0.2)",
-color: activeTab === tab ? "#6B46C1" : "white",
-fontWeight: "bold",
-cursor: "
+<div className="tabs">
+<button className={activeTab === "dashboard" ? "active" : ""} onClick={() => setActiveTab("dashboard")}>Dashboard</button>
+<button className={activeTab === "clients" ? "active" : ""} onClick={() => setActiveTab("clients")}>Clients</button>
+<button className={activeTab === "invoices" ? "active" : ""} onClick={() => setActiveTab("invoices")}>Invoices</button>
+</div>
 
+<div className="content">
+{activeTab === "dashboard" && (
+<div>
+<h2>📊 Dashboard Overview</h2>
+<div className="stats">
+<div className="card"><p>Total Clients</p><h3>{clients.length}</h3></div>
+<div className="card"><p>Total Invoices</p><h3>{invoices.length}</h3></div>
+<div className="card"><p>Revenue</p><h3>₦225,000</h3></div>
+<div className="card"><p>Pending</p><h3>{invoices.filter(i => i.status === "Unpaid").length}</h3></div>
+</div>
+</div>
+)}
 
+{activeTab === "clients" && (
+<div>
+<h2>👥 Manage Clients</h2>
+<div className="form">
+<input placeholder="Client Name" value={newClient.name} onChange={(e) => setNewClient({...newClient, name: e.target.value})}/>
+<input placeholder="Client Email" value={newClient.email} onChange={(e) => setNewClient({...newClient, email: e.target.value})}/>
+<button onClick={addClient}>Add Client</button>
+</div>
+<table>
+<thead><tr><th>Name</th><th>Email</th><th>Status</th></tr></thead>
+<tbody>
+{clients.map(c => <tr key={c.id}><td>{c.name}</td><td>{c.email}</td><td>{c.status}</td></tr>)}
+</tbody>
+</table>
+</div>
+)}
+
+{activeTab === "invoices" && (
+<div>
+<h2>🧾 Invoices</h2>
+<table>
+<thead><tr><th>Client</th><th>Amount</th><th>Status</th></tr></thead>
+<tbody>
+{invoices.map(i => <tr key={i.id}><td>{i.client}</td><td>{i.amount}</td><td>{i.status}</td></tr>)}
+</tbody>
+</table>
+</div>
+)}
+</div>
+</div>
+);
+}
+
+export default App;
