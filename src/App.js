@@ -1,56 +1,48 @@
 import React, { useState } from "react";
 
 export default function App() {
-const [tab, setTab] = useState("dashboard");
-const [clients, setClients] = useState([
-{id:1, name:"ABC Company", email:"abc@mail.com", status:"Active"},
-{id:2, name:"XYZ Ltd", email:"xyz@mail.com", status:"Pending"}
-]);
-const [invoices] = useState([
-{id:1, client:"ABC Company", amount:"₦150,000", status:"Paid"},
-{id:2, client:"XYZ Ltd", amount:"₦75,000", status:"Unpaid"}
-]);
-const [name, setName] = useState("");
-const [email, setEmail] = useState("");
+const [activeMenu, setActiveMenu] = useState("Home (My Work)");
+
+const tasks = [
+{id: 1, title: "Design EFE TIMES workspace UI", priority: "Urgent", status: "To Do", project: "Design"},
+{id: 2, title: "Implement Task List & Kanban Board views", priority: "High", status: "In Progress", project: "Engineering"},
+{id: 3, title: "Connect Express backend with Supabase", priority: "Normal", status: "In Progress", project: "Engineering"},
+{id: 4, title: "Review daily team goals & milestones", priority: "Low", status: "To Do", project: "Productivity"},
+];
+
+const priorityTasks = tasks.slice(0,3);
 
 return (
-<div style={{background:"linear-gradient(135deg,#6B46C1,#9333EA)",minHeight:"100vh",padding:20,color:"white",fontFamily:"Arial"}}>
-<h1>Good morning, EFE 👋</h1>
-<p>Welcome to EFE TIMES Work Suite</p>
+<div style={{display: "flex", minHeight: "100vh", background: "#F8F9FA", fontFamily: "Inter, system-ui"}}>
 
-<div style={{display:"flex",gap:10,margin:"20px 0"}}>
-<button onClick={()=>setTab("dashboard")} style={{padding:"12px 24px",borderRadius:10,border:"none",background:tab==="dashboard"?"white":"rgba(255,255,255,0.2)",color:tab==="dashboard"?"#6B46C1":"white",fontWeight:"bold"}}>Dashboard</button>
-<button onClick={()=>setTab("clients")} style={{padding:"12px 24px",borderRadius:10,border:"none",background:tab==="clients"?"white":"rgba(255,255,255,0.2)",color:tab==="clients"?"#6B46C1":"white",fontWeight:"bold"}}>Clients</button>
-<button onClick={()=>setTab("invoices")} style={{padding:"12px 24px",borderRadius:10,border:"none",background:tab==="invoices"?"white":"rgba(255,255,255,0.2)",color:tab==="invoices"?"#6B46C1":"white",fontWeight:"bold"}}>Invoices</button>
+{/* LEFT SIDEBAR */}
+<div style={{width: 260, background: "white", borderRight: "1px solid #E5E7EB", padding: "16px"}}>
+<div style={{display: "flex", alignItems: "center", gap: 10, marginBottom: 24, padding: "8px"}}>
+<div style={{width: 32, height: 32, background: "#6B46C1", borderRadius: 8, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700}}>E</div>
+<h2 style={{fontSize: 18, fontWeight: 700, margin: 0}}>EFE TIMES</h2>
 </div>
 
-<div style={{background:"white",color:"#333",borderRadius:16,padding:24}}>
-{tab==="dashboard" && <div>
-<h2>📊 Dashboard Overview</h2>
-<div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
-<div style={{background:"#F3E8FF",padding:20,borderRadius:12}}><p>Total Clients</p><h3>{clients.length}</h3></div>
-<div style={{background:"#F3E8FF",padding:20,borderRadius:12}}><p>Total Invoices</p><h3>{invoices.length}</h3></div>
-<div style={{background:"#F3E8FF",padding:20,borderRadius:12}}><p>Revenue</p><h3>₦225,000</h3></div>
-<div style={{background:"#F3E8FF",padding:20,borderRadius:12}}><p>Pending</p><h3>1</h3></div>
+<div style={{marginBottom: 20}}>
+<p style={{fontSize: 12, color: "#6B7280", textTransform: "uppercase", fontWeight: 600, paddingLeft: 8}}>WORKSPACE</p>
+{["Home (My Work)", "All Tasks", "To Do", "In Progress", "Completed", "Urgent Priority"].map(item => (
+<div key={item} onClick={() => setActiveMenu(item)}
+style={{padding: "10px 12px", borderRadius: 8, cursor: "pointer", fontSize: 14,
+background: activeMenu === item ? "#EDE9FE" : "transparent",
+color: activeMenu === item ? "#6B46C1" : "#374151", fontWeight: activeMenu === item ? 600 : 400}}>
+{item}
 </div>
-</div>}
+))}
+</div>
 
-{tab==="clients" && <div>
-<h2>👥 Manage Clients</h2>
-<div style={{display:"flex",gap:10,marginBottom:20}}>
-<input placeholder="Client Name" value={name} onChange={e=>setName(e.target.value)} style={{padding:10,borderRadius:8,border:"1px solid #ddd"}}/>
-<input placeholder="Client Email" value={email} onChange={e=>setEmail(e.target.value)} style={{padding:10,borderRadius:8,border:"1px solid #ddd"}}/>
-<button onClick={()=>{if(name&&email){setClients([...clients,{id:clients.length+1,name,email,status:"Active"}]);setName("");setEmail("")}}} style={{padding:"10px 20px",background:"#6B46C1",color:"white",border:"none",borderRadius:8}}>Add</button>
+<div>
+<p style={{fontSize: 12, color: "#6B7280", textTransform: "uppercase", fontWeight: 600, paddingLeft: 8}}>SPACES & PROJECTS</p>
+{["Productivity", "Engineering", "Design"].map(item => (
+<div key={item} style={{padding: "10px 12px", borderRadius: 8, cursor: "pointer", fontSize: 14, color: "#374151"}}>
+{item}
 </div>
-<table style={{width:"100%"}}><thead><tr><th>Name</th><th>Email</th><th>Status</th></tr></thead><tbody>{clients.map(c=><tr key={c.id}><td>{c.name}</td><td>{c.email}</td><td>{c.status}</td></tr>)}</tbody></table>
-</div>}
+))}
+</div>
+</div>
 
-{tab==="invoices" && <div>
-<h2>🧾 Invoices</h2>
-<table style={{width:"100%"}}><thead><tr><th>Client</th><th>Amount</th><th>Status</th></tr></thead><tbody>{invoices.map(i=><tr key={i.id}><td>{i.client}</td><td>{i.amount}</td><td>{i.status}</td></tr>)}</tbody></table>
-</div>}
-</div>
-</div>
-)
-}
-
+{/* MAIN CONTENT */}
+<div style={{flex: 1, padding: "
